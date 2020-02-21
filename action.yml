@@ -1,13 +1,31 @@
-name: 'Wait'
-description: 'Wait a designated number of milliseconds'
+name: 'Deploy'
+description: 'Deploy a branch'
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
+  site:
+    description: 'The site to deploy'
     required: true
-    default: '1000'
+    default: acm
+  branch:
+    description: 'The branch to deploy'
+    required: true
+    default: 'master'
+  environ:
+    description: 'The environment to deploy to'
+    required: true
+    default: 'review'
+  command:
+    description: 'deploy or destroy'
+    required: true
+    default: 'deploy'
+  token:
+    description: 'Hubot auth token'
+    required: true
+  url:
+    description: 'Hubot url'
+    required: true
 outputs:
-  time: # output will be available to future steps 
-    description: 'The message to output'
+  status:
+    description: 'The http status we got'
 runs:
   using: 'node12'
   main: 'dist/index.js'

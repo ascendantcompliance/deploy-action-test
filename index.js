@@ -1,22 +1,37 @@
-const core = require('@actions/core');
-const wait = require('./wait');
+const core = require('@actions/core')
+const axios = require('axios')
 
+const expectedStatuses = [200]
 
-// most @actions toolkit packages have async methods
-async function run() {
-  try { 
-    const ms = core.getInput('milliseconds');
-    console.log(`Waiting ${ms} milliseconds ...`)
+try {
+  const site = core.getInput('site') || 'acm'
+  const branch = core.getInput('branch')
+  const environ = core.getInput('environ')
+  const command = core.getInput('command')
+  const token = core.getInput('token')
+  const baseUrl = core.getInput('url')
 
-    core.debug((new Date()).toTimeString())
-    await wait(parseInt(ms));
-    core.debug((new Date()).toTimeString())
-
-    core.setOutput('time', new Date().toTimeString());
-  } 
-  catch (error) {
-    core.setFailed(error.message);
-  }
+  axios({
+    method: 'post',
+    url: `${baseUrl}/hubot/${command}`,
+    headers: { 'hubot-http-token': token, 'content-type': 'application/json' },
+    data: {
+      site,
+      branch,
+      environ
+    }
+  })
+    .then(resp => {
+      if (!expectedStatuses.includes(resp.status)) {
+        core.setFailed(`${command} failed with return code: ${resp.status}`)
+      } else {
+        core.setOutput('status', resp.status.toString())
+        console.log(resp.data)
+      }
+    })
+    .catch(err => {
+      core.setFailed(`Err caught: ${err.message}`)
+    })
+} catch (error) {
+  core.setFailed(`Error caught: ${error.message}`)
 }
-
-run()
