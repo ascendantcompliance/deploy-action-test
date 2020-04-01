@@ -17,6 +17,10 @@ inputs:
     description: 'deploy or destroy'
     required: true
     default: 'deploy'
+  timeout:
+    description: 'The number of milliseconds before the request times out'
+    required: false
+    default: '900000'
   token:
     description: 'Hubot auth token'
     required: true
