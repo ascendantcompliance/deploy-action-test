@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/ascendantcompliance/deploy-action#readme",
   "dependencies": {
-    "@actions/core": "^1.2.2",
+    "@actions/core": "^1.2.3",
     "axios": "^0.19.2"
   },
   "devDependencies": {
